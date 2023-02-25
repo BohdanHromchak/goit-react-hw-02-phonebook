@@ -1,7 +1,8 @@
 import { nanoid } from 'nanoid'
-import ContactForm from './ContactFrom/ContactFrom';
+import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
+import Layout from './Layout/Layout';
 const { Component } = require("react");
 
 
@@ -54,13 +55,13 @@ handleSearch = () => {
 
   render() {
     return(
-      <>
+<Layout>
 <h1>Phonebook</h1>
 <ContactForm onFormSubmit={this.formSubmitHandler}/>
 <h2>Contacts</h2>
 <Filter value={this.state.filter} onChange={this.handleChange}/>
 <ContactList onSearch={this.handleSearch} onDelete={this.handleDelete}/>
-      </>
+</Layout>
     )
   }
 }
