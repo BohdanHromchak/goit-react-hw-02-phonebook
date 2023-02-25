@@ -1,5 +1,9 @@
 import { nanoid } from 'nanoid'
+import ContactForm from './ContactFrom/ContactFrom';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
 const { Component } = require("react");
+
 
 class App extends Component {
   state = {
@@ -7,42 +11,27 @@ class App extends Component {
     {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
     {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
     {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},],
-    filter: '',
-    name: '',
-    number: ''
+    filter: ''
   }
 
-handleChange = (event) => {
-      const {name, value} = event.currentTarget
-      this.setState({[name]: value})
-    }
-
-handleSubmit = (event) => {
-      event.preventDefault()
-      this.setState({name: "", number: ""})
+formSubmitHandler = (data) => {
 
       const newContact = {
         id: nanoid(),
-        name: this.state.name,
-        number: this.state.number
+        name: data.name,
+        number: data.number
       }
    
     this.setState((prevState)=> {
-     if(prevState.contacts.find(contact => contact.name.includes(this.state.name))) {
-      return alert(`${this.state.name} is already in contacts.`)
+     if(prevState.contacts.find(contact => contact.name.includes(newContact.name))) {
+      return alert(`${newContact.name} is already in contacts.`)
      }
       
     return {
     contacts: [...prevState.contacts, newContact]
     }
     })
-  }
-
-handleSearch = () => {
-    const {contacts, filter} = this.state
-   return contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()))
-
-  }
+} 
 
 handleDelete = (id) => {
   this.setState((prevState) => {
@@ -52,57 +41,25 @@ handleDelete = (id) => {
   })
 }
 
+handleChange = (event) => {
+  const {name, value} = event.currentTarget
+  this.setState({[name]: value})
+}
+
+handleSearch = () => {
+  const {contacts, filter} = this.state
+ return contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()))
+
+}
+
   render() {
     return(
       <>
-      <h1>Phonebook</h1>
-<form onSubmit={this.handleSubmit}>
-
-  <label>Name
-      <input
-  type="text"
-  name="name"
-  pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-  title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-  required
-  value={this.state.name}
-  onChange={this.handleChange}
-/>
-</label>
-
-<label>Number
-      <input
-  type="tel"
-  name="number"
-  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-  required
-  value={this.state.number}
-  onChange={this.handleChange}
-/>
-</label>
-
-<button>Add contact</button>
-
-</form>
-
-<label>Find contacts by name
-<input
-  type="text"
-  name="filter"
-  value={this.state.filter}
-  onChange={this.handleChange}
-/>
-</label>
-
+<h1>Phonebook</h1>
+<ContactForm onFormSubmit={this.formSubmitHandler}/>
 <h2>Contacts</h2>
-
-<ul>
-{this.handleSearch().map(({id, name, number}) => (
-    <li key={id}>{name}: {number}<button onClick={() => this.handleDelete(id)}>Delete</button></li>
-  ))}
-
-</ul>
+<Filter value={this.state.filter} onChange={this.handleChange}/>
+<ContactList onSearch={this.handleSearch} onDelete={this.handleDelete}/>
       </>
     )
   }
