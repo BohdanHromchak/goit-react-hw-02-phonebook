@@ -9,7 +9,7 @@ class ContactList extends Component {
         return(
             <ul className={css.list}>
     {onSearch().map(({id, name, number}) => (
-    <li key={id} className={css.item}>{name}: {number}<button onClick={() => onDelete(id)}>Delete</button></li>
+    <li key={id} className={css.item}>{name}: {number}<button onClick={() => onDelete(id)} className={css.button}>Delete</button></li>
   ))}
 </ul>
         )
